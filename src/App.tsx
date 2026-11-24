@@ -1,5 +1,7 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { AuthProvider } from './components/AuthContext';
+import { AuthModal } from './components/AuthModal';
 import { Layout } from './components/Layout';
 import { HomePage } from './pages/HomePage';
 import { TopicPage } from './pages/TopicPage';
@@ -30,15 +32,18 @@ function NotFoundPage() {
 
 export default function App() {
   return (
-    <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/topic/:topicId" element={<TopicPage />} />
-        <Route path="/tools/noun-simulator" element={<NounSimulatorPage />} />
-        <Route path="/tools/verb-government" element={<VerbGovernmentPage />} />
-        <Route path="/tools/tense-matrix" element={<TenseMatrixPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Route>
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/topic/:topicId" element={<TopicPage />} />
+          <Route path="/tools/noun-simulator" element={<NounSimulatorPage />} />
+          <Route path="/tools/verb-government" element={<VerbGovernmentPage />} />
+          <Route path="/tools/tense-matrix" element={<TenseMatrixPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Routes>
+      <AuthModal />
+    </AuthProvider>
   );
 }

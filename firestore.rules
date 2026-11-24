@@ -1,0 +1,105 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// This security rules file assumes the following data structures:
+//
+// Collection: userProgress
+// Document ID: {userId} (MUST match request.auth.uid)
+// Fields:
+//   - completedTopics: list<string> (required, 0..200 items, ASCII slug strings
+//     matching [a-zA-Z0-9_-]+, joined size <= 16000 chars) - list of completed
+//     Turkish grammar topic IDs
+//   - updatedAt: timestamp (required, MUST equal request.time via
+//     serverTimestamp()) - last synchronization timestamp
+//
+// Access Patterns:
+//   - Single-document owner-only get, create, update, and delete on
+//     /userProgress/{userId}.
+//   - Collection-level list queries are explicitly denied.
+//   - All other collections and nested subcollections are denied by default.
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Check if the request is from an authenticated user
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if the authenticated user owns the document keyed by userId
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Validate that the incoming document contains all required fields
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // Validate that the incoming document contains only allowed fields
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+
+    // Validate that a non-empty list contains only valid slug strings within
+    // a bounded total size (join fails evaluation if any element is not a string)
+    function isValidTopicSlugs(topics) {
+      let joined = topics.join(',');
+      return joined.size() <= 16000 &&
+             joined.matches('^[a-zA-Z0-9_-]+(,[a-zA-Z0-9_-]+)*$');
+    }
+
+    // Validate the completedTopics list (type, count bound, element types & size)
+    function isValidCompletedTopics(topics) {
+      return topics is list &&
+             topics.size() <= 200 &&
+             (topics.size() == 0 || isValidTopicSlugs(topics));
+    }
+
+    // ===============================================================
+    // Domain Validators (Used in BOTH create and update)
+    // ===============================================================
+
+    function isValidUserProgress(data) {
+      return hasOnlyAllowedFields(['completedTopics', 'updatedAt']) &&
+             hasRequiredFields(['completedTopics', 'updatedAt']) &&
+             isValidCompletedTopics(data.completedTopics) &&
+             data.updatedAt is timestamp &&
+             data.updatedAt == request.time;
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
+    match /userProgress/{userId} {
+      // Owner-only single-document read; disallow collection listing
+      allow get: if isOwner(userId);
+      allow list: if false;
+
+      // Owner-only create and update with strict schema & payload validation
+      allow create: if isOwner(userId) && isValidUserProgress(request.resource.data);
+      allow update: if isOwner(userId) && isValidUserProgress(request.resource.data);
+
+      // Owner-only delete
+      allow delete: if isOwner(userId);
+    }
+
+    // ===============================================================
+    // Default Deny
+    // ===============================================================
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

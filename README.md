@@ -203,3 +203,22 @@ export const myNewTopic: GrammarTopic = {
 
 ### Шаг 4. Проверьте сборку и деплой
 Запустите `npx tsc --noEmit` и `npm run build` локально или сделайте `git push` в ветку `main` — GitHub Actions автоматически прогонит проверки и обновит сайт на GitHub Pages.
+
+---
+
+## Авторизация и синхронизация прогресса (Firebase)
+
+Приложение работает в **гостевом офлайн-режиме** через `localStorage` даже без настройки Firebase. Чтобы активировать вход по **Email + пароль** и через **Google** с облачной синхронизацией пройденных тем в Cloud Firestore:
+
+1. Создайте проект в [Firebase Console](https://console.firebase.google.com/) и добавьте **Web App** (`</>`), чтобы получить 6 значений конфигурации (`apiKey`, `authDomain`, `projectId`, `storageBucket`, `messagingSenderId`, `appId`).
+2. В разделе **Authentication → Sign-in method** включите провайдеры **Email/Password** и **Google**.
+3. В **Authentication → Settings → Authorized domains** добавьте домен `levrybakov.github.io` (без `https://` и без пути).
+4. В разделе **Firestore Database** создайте базу данных (Standard mode) и опубликуйте правила из файла [`firestore.rules`](./firestore.rules) во вкладке **Rules**.
+5. В репозитории GitHub откройте **Settings → Secrets and variables → Actions → Variables** (или **Secrets**) и добавьте 6 переменных из `.env.example`:
+   - `VITE_FIREBASE_API_KEY`
+   - `VITE_FIREBASE_AUTH_DOMAIN`
+   - `VITE_FIREBASE_PROJECT_ID`
+   - `VITE_FIREBASE_STORAGE_BUCKET`
+   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+   - `VITE_FIREBASE_APP_ID`
+6. Перезапустите workflow **CI & Deploy PWA to GitHub Pages** (вкладка **Actions → Run workflow**). После входа локальный прогресс автоматически объединится с облачным.

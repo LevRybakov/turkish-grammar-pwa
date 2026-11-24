@@ -1,14 +1,30 @@
 import { useCallback, useEffect, useState } from 'react';
 
-const STORAGE_KEY = 'tr-grammar-completed-topics';
-const SYNC_EVENT = 'tr-grammar-completed-sync';
+export const COMPLETED_STORAGE_KEY = 'tr-grammar-completed-topics';
+export const COMPLETED_SYNC_EVENT = 'tr-grammar-completed-sync';
+export const COMPLETED_USER_MUTATION_EVENT = 'tr-grammar-completed-user-mutation';
 
-function readCompletedIdsFromStorage(): Set<string> {
+const VALID_TOPIC_ID_RE = /^[a-zA-Z0-9_-]+$/;
+
+export function sanitizeCompletedTopicIds(ids: Iterable<string>): string[] {
+  const unique = new Set<string>();
+  for (const id of ids) {
+    if (typeof id === 'string' && VALID_TOPIC_ID_RE.test(id)) {
+      unique.add(id);
+      if (unique.size >= 200) {
+        break;
+      }
+    }
+  }
+  return Array.from(unique);
+}
+
+export function readCompletedIdsFromStorage(): Set<string> {
   if (typeof window === 'undefined') {
     return new Set<string>();
   }
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(COMPLETED_STORAGE_KEY);
     if (!raw) {
       return new Set<string>();
     }
@@ -16,20 +32,36 @@ function readCompletedIdsFromStorage(): Set<string> {
     if (!Array.isArray(parsed)) {
       return new Set<string>();
     }
-    const ids = parsed.filter((item): item is string => typeof item === 'string');
+    const ids = sanitizeCompletedTopicIds(
+      parsed.filter((item): item is string => typeof item === 'string')
+    );
     return new Set<string>(ids);
   } catch {
     return new Set<string>();
   }
 }
 
-function writeCompletedIdsToStorage(ids: Set<string>): void {
+export function writeCompletedIdsToStorage(
+  ids: Set<string>,
+  options?: { fromCloud?: boolean }
+): void {
   if (typeof window === 'undefined') {
     return;
   }
+  const cleanList = sanitizeCompletedTopicIds(ids);
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(ids)));
-    window.dispatchEvent(new Event(SYNC_EVENT));
+    window.localStorage.setItem(
+      COMPLETED_STORAGE_KEY,
+      JSON.stringify(cleanList)
+    );
+    window.dispatchEvent(new Event(COMPLETED_SYNC_EVENT));
+    if (!options?.fromCloud) {
+      window.dispatchEvent(
+        new CustomEvent<string[]>(COMPLETED_USER_MUTATION_EVENT, {
+          detail: cleanList,
+        })
+      );
+    }
   } catch {
     // Ignore storage quota or private mode errors
   }
@@ -53,15 +85,15 @@ export function useCompletedTopics(): UseCompletedTopicsResult {
     };
 
     const handleStorage = (event: StorageEvent) => {
-      if (event.key === STORAGE_KEY || event.key === null) {
+      if (event.key === COMPLETED_STORAGE_KEY || event.key === null) {
         sync();
       }
     };
 
-    window.addEventListener(SYNC_EVENT, sync);
+    window.addEventListener(COMPLETED_SYNC_EVENT, sync);
     window.addEventListener('storage', handleStorage);
     return () => {
-      window.removeEventListener(SYNC_EVENT, sync);
+      window.removeEventListener(COMPLETED_SYNC_EVENT, sync);
       window.removeEventListener('storage', handleStorage);
     };
   }, []);

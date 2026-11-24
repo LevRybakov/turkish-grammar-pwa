@@ -14,21 +14,28 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
+  Cloud,
+  CloudOff,
   Compass,
   GitBranch,
   Home,
   Layers,
+  Loader2,
+  LogIn,
+  LogOut,
   Menu,
   Moon,
   RotateCcw,
   Search,
   Sun,
   Table2,
+  User as UserIcon,
   X,
 } from 'lucide-react';
 import { ALL_TOPIC_META, SECTIONS } from '../data';
 import { CEFR_LEVEL_COLORS } from '../constants/morphemeColors';
 import type { CEFRLevel, Section, TopicMeta } from '../types/grammar';
+import { useAuth } from './AuthContext';
 import { GlobalSearchModal } from './GlobalSearchModal';
 import { useCompletedTopics } from './useCompletedTopics';
 import { useTheme } from './useTheme';
@@ -66,6 +73,8 @@ export function Layout({ children }: LayoutProps) {
   const { topicId } = useParams<{ topicId?: string }>();
   const { isDark, toggleTheme } = useTheme();
   const { completedIds, isCompleted } = useCompletedTopics();
+  const { user, loading: authLoading, syncStatus, openAuthModal, logout } =
+    useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -214,6 +223,40 @@ export function Layout({ children }: LayoutProps) {
               className="h-full rounded-full bg-emerald-500 transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
+          </div>
+          <div className="mt-2.5 flex items-center justify-between gap-2 text-[11px]">
+            {user ? (
+              <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 truncate">
+                {syncStatus === 'syncing' ? (
+                  <>
+                    <Loader2 className="h-3 w-3 animate-spin text-blue-500 shrink-0" />
+                    <span>Синхронизация...</span>
+                  </>
+                ) : syncStatus === 'error' ? (
+                  <>
+                    <CloudOff className="h-3 w-3 text-amber-500 shrink-0" />
+                    <span>Офлайн-режим</span>
+                  </>
+                ) : (
+                  <>
+                    <Cloud className="h-3 w-3 text-emerald-500 shrink-0" />
+                    <span className="truncate">Синхронизировано</span>
+                  </>
+                )}
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  openAuthModal();
+                }}
+                className="inline-flex items-center gap-1 font-medium text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Cloud className="h-3 w-3 shrink-0" />
+                <span>Войти для синхронизации</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -506,6 +549,58 @@ export function Layout({ children }: LayoutProps) {
                     <Moon className="h-4 w-4 text-slate-600" />
                   )}
                 </button>
+
+                {authLoading ? (
+                  <div
+                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shrink-0"
+                    aria-label="Загрузка профиля"
+                  >
+                    <Loader2 className="h-4 w-4 animate-spin text-slate-400" />
+                  </div>
+                ) : user ? (
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <div
+                      title={user.email ?? user.displayName ?? 'Аккаунт'}
+                      className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 max-w-[160px]"
+                    >
+                      {user.photoURL ? (
+                        <img
+                          src={user.photoURL}
+                          alt=""
+                          referrerPolicy="no-referrer"
+                          className="h-5 w-5 rounded-full object-cover shrink-0"
+                        />
+                      ) : (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/70 text-blue-700 dark:text-blue-300 shrink-0">
+                          <UserIcon className="h-3 w-3" />
+                        </span>
+                      )}
+                      <span className="hidden sm:inline text-xs font-medium text-slate-700 dark:text-slate-200 truncate">
+                        {user.displayName ?? user.email ?? 'Профиль'}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void logout();
+                      }}
+                      aria-label="Выйти из аккаунта"
+                      title="Выйти"
+                      className="rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-2 text-slate-600 dark:text-slate-300 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 dark:hover:bg-rose-950/40 dark:hover:text-rose-400 dark:hover:border-rose-800 transition-colors shrink-0"
+                    >
+                      <LogOut className="h-4 w-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={openAuthModal}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 px-3 py-2 text-xs font-semibold text-white transition-colors shrink-0"
+                  >
+                    <LogIn className="h-3.5 w-3.5" />
+                    <span className="hidden sm:inline">Войти</span>
+                  </button>
+                )}
               </div>
             </div>
           </header>
