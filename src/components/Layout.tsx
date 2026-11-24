@@ -73,8 +73,15 @@ export function Layout({ children }: LayoutProps) {
   const { topicId } = useParams<{ topicId?: string }>();
   const { isDark, toggleTheme } = useTheme();
   const { completedIds, isCompleted } = useCompletedTopics();
-  const { user, loading: authLoading, syncStatus, openAuthModal, logout } =
-    useAuth();
+  const {
+    user,
+    loading: authLoading,
+    syncStatus,
+    syncError,
+    retrySync,
+    openAuthModal,
+    logout,
+  } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -226,24 +233,36 @@ export function Layout({ children }: LayoutProps) {
           </div>
           <div className="mt-2.5 flex items-center justify-between gap-2 text-[11px]">
             {user ? (
-              <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 truncate">
-                {syncStatus === 'syncing' ? (
-                  <>
-                    <Loader2 className="h-3 w-3 animate-spin text-blue-500 shrink-0" />
-                    <span>Синхронизация...</span>
-                  </>
-                ) : syncStatus === 'error' ? (
-                  <>
-                    <CloudOff className="h-3 w-3 text-amber-500 shrink-0" />
-                    <span>Офлайн-режим</span>
-                  </>
-                ) : (
-                  <>
-                    <Cloud className="h-3 w-3 text-emerald-500 shrink-0" />
-                    <span className="truncate">Синхронизировано</span>
-                  </>
-                )}
-              </span>
+              syncStatus === 'syncing' ? (
+                <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 truncate">
+                  <Loader2 className="h-3 w-3 animate-spin text-blue-500 shrink-0" />
+                  <span>Синхронизация...</span>
+                </span>
+              ) : syncStatus === 'error' ? (
+                <div className="flex items-center justify-between gap-2 w-full min-w-0">
+                  <span
+                    title={syncError ?? 'Ошибка синхронизации'}
+                    className="inline-flex items-center gap-1.5 text-amber-600 dark:text-amber-400 truncate min-w-0"
+                  >
+                    <CloudOff className="h-3 w-3 shrink-0" />
+                    <span className="truncate">
+                      {syncError ?? 'Офлайн-режим'}
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={retrySync}
+                    className="shrink-0 text-blue-600 dark:text-blue-400 hover:underline font-medium"
+                  >
+                    Повторить
+                  </button>
+                </div>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-400 truncate">
+                  <Cloud className="h-3 w-3 text-emerald-500 shrink-0" />
+                  <span className="truncate">Синхронизировано</span>
+                </span>
+              )
             ) : (
               <button
                 type="button"
@@ -473,7 +492,7 @@ export function Layout({ children }: LayoutProps) {
 
   return (
     <SearchModalContext.Provider value={{ openSearch }}>
-      <div className="min-h-screen flex bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      <div className="min-h-screen flex bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 overflow-x-clip">
         {/* Desktop fixed sidebar */}
         <aside className="hidden lg:block w-72 xl:w-80 shrink-0 sticky top-0 h-screen">
           {sidebarContent}
@@ -497,43 +516,49 @@ export function Layout({ children }: LayoutProps) {
         <div className="flex-1 min-w-0 flex flex-col">
           {/* Top header */}
           <header className="sticky top-0 z-30 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md">
-            <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-3 px-4 sm:px-6">
-              <div className="flex items-center gap-2.5 min-w-0">
+            <div className="mx-auto flex h-14 max-w-5xl items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6">
+              {/* Mobile menu & brand */}
+              <div className="flex lg:hidden items-center gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => setMobileOpen(true)}
                   aria-label="Открыть навигацию"
-                  className="lg:hidden rounded-xl border border-slate-200 dark:border-slate-700 p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  className="rounded-xl border border-slate-200 dark:border-slate-700 p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0"
                 >
                   <Menu className="h-5 w-5" />
                 </button>
                 <Link
                   to="/"
-                  className="lg:hidden flex items-center gap-2 font-bold text-sm text-slate-900 dark:text-slate-100 truncate"
+                  aria-label="Турецкая грамматика — Главная"
+                  className="flex items-center gap-1.5 font-bold text-sm text-slate-900 dark:text-slate-100"
                 >
-                  <Compass className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0" />
-                  <span className="truncate">Турецкая грамматика</span>
+                  <Compass className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0" />
+                  <span className="hidden sm:inline truncate max-w-[160px]">
+                    Турецкая грамматика
+                  </span>
                 </Link>
               </div>
 
-              <div className="flex flex-1 max-w-md items-center justify-end lg:justify-between gap-2">
-                <button
-                  type="button"
-                  onClick={() => openSearch('')}
-                  className="flex flex-1 items-center justify-between gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-3 py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:border-blue-400 dark:hover:border-blue-500 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                >
-                  <span className="flex items-center gap-2 truncate">
-                    <Search className="h-4 w-4 shrink-0 text-slate-400" />
-                    <span className="truncate hidden sm:inline">
-                      Обратный поиск по аффиксам и темам...
-                    </span>
-                    <span className="truncate sm:hidden">Поиск...</span>
+              {/* Search button */}
+              <button
+                type="button"
+                onClick={() => openSearch('')}
+                className="flex flex-1 min-w-0 max-w-md items-center justify-between gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 px-3 py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:border-blue-400 dark:hover:border-blue-500 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+              >
+                <span className="flex items-center gap-2 min-w-0 truncate">
+                  <Search className="h-4 w-4 shrink-0 text-slate-400" />
+                  <span className="truncate hidden sm:inline">
+                    Обратный поиск по аффиксам и темам...
                   </span>
-                  <kbd className="hidden sm:inline-flex items-center rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
-                    Ctrl+K
-                  </kbd>
-                </button>
+                  <span className="truncate sm:hidden">Поиск...</span>
+                </span>
+                <kbd className="hidden sm:inline-flex shrink-0 items-center rounded border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 px-1.5 py-0.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                  Ctrl+K
+                </kbd>
+              </button>
 
+              {/* Right controls: theme + auth */}
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={toggleTheme}
@@ -561,7 +586,7 @@ export function Layout({ children }: LayoutProps) {
                   <div className="flex items-center gap-1.5 shrink-0">
                     <div
                       title={user.email ?? user.displayName ?? 'Аккаунт'}
-                      className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2.5 py-1.5 max-w-[160px]"
+                      className="flex items-center gap-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-2 sm:px-2.5 py-1.5 max-w-[160px] min-w-0"
                     >
                       {user.photoURL ? (
                         <img
@@ -575,7 +600,7 @@ export function Layout({ children }: LayoutProps) {
                           <UserIcon className="h-3 w-3" />
                         </span>
                       )}
-                      <span className="hidden sm:inline text-xs font-medium text-slate-700 dark:text-slate-200 truncate">
+                      <span className="hidden md:inline text-xs font-medium text-slate-700 dark:text-slate-200 truncate">
                         {user.displayName ?? user.email ?? 'Профиль'}
                       </span>
                     </div>

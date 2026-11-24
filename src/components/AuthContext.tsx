@@ -39,6 +39,8 @@ export interface AuthContextValue {
   loading: boolean;
   isConfigured: boolean;
   syncStatus: SyncStatus;
+  syncError: string | null;
+  retrySync: () => void;
   isAuthModalOpen: boolean;
   openAuthModal: () => void;
   closeAuthModal: () => void;
@@ -51,14 +53,38 @@ export interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function formatFirebaseAuthError(error: unknown): string {
-  const code =
+function extractFirebaseErrorCode(error: unknown): string {
+  if (
     typeof error === 'object' &&
     error !== null &&
     'code' in error &&
     typeof (error as { code: unknown }).code === 'string'
-      ? (error as { code: string }).code
-      : '';
+  ) {
+    return (error as { code: string }).code;
+  }
+  return '';
+}
+
+function formatFirestoreSyncError(error: unknown): string {
+  const code = extractFirebaseErrorCode(error);
+  switch (code) {
+    case 'permission-denied':
+      return 'Нет прав доступа (проверьте firestore.rules)';
+    case 'not-found':
+      return 'База Firestore не найдена';
+    case 'unavailable':
+      return 'Нет связи с Firestore (офлайн)';
+    case 'failed-precondition':
+      return 'База Firestore не готова';
+    case 'unauthenticated':
+      return 'Сессия истекла — войдите снова';
+    default:
+      return code ? `Ошибка синхронизации (${code})` : 'Офлайн-режим';
+  }
+}
+
+export function formatFirebaseAuthError(error: unknown): string {
+  const code = extractFirebaseErrorCode(error);
 
   switch (code) {
     case 'auth/invalid-credential':
@@ -113,6 +139,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(isFirebaseConfigured);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [syncAttempt, setSyncAttempt] = useState<number>(0);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
 
   const userRef = useRef<User | null>(null);
@@ -130,6 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
       if (!nextUser) {
         setSyncStatus('idle');
+        setSyncError(null);
       }
     });
 
@@ -149,6 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const initSync = async () => {
       setSyncStatus('syncing');
+      setSyncError(null);
       try {
         const localIds = readCompletedIdsFromStorage();
         const snap = await getDoc(progressDocRef);
@@ -177,6 +207,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return;
         }
         setSyncStatus('synced');
+        setSyncError(null);
 
         unsubscribeSnapshot = onSnapshot(
           progressDocRef,
@@ -192,14 +223,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               writeCompletedIdsToStorage(nextRemote, { fromCloud: true });
             }
             setSyncStatus('synced');
+            setSyncError(null);
           },
-          () => {
+          (err) => {
+            console.error('[Firestore onSnapshot error]', err);
             setSyncStatus('error');
+            setSyncError(formatFirestoreSyncError(err));
           }
         );
-      } catch {
+      } catch (err) {
+        console.error('[Firestore initSync error]', err);
         if (!cancelled) {
           setSyncStatus('error');
+          setSyncError(formatFirestoreSyncError(err));
         }
       }
     };
@@ -212,7 +248,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         unsubscribeSnapshot();
       }
     };
-  }, [user]);
+  }, [user, syncAttempt]);
 
   // Push local completed-topic mutations to Firestore when signed in
   useEffect(() => {
@@ -233,6 +269,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         : sanitizeCompletedTopicIds(readCompletedIdsFromStorage());
 
       setSyncStatus('syncing');
+      setSyncError(null);
       const progressDocRef = doc(firestore, 'userProgress', currentUser.uid);
       void setDoc(progressDocRef, {
         completedTopics: topics,
@@ -240,9 +277,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
         .then(() => {
           setSyncStatus('synced');
+          setSyncError(null);
         })
-        .catch(() => {
+        .catch((err: unknown) => {
+          console.error('[Firestore setDoc error]', err);
           setSyncStatus('error');
+          setSyncError(formatFirestoreSyncError(err));
         });
     };
 
@@ -253,6 +293,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         handleUserMutation
       );
     };
+  }, []);
+
+  const retrySync = useCallback(() => {
+    setSyncAttempt((prev) => prev + 1);
   }, []);
 
   const openAuthModal = useCallback(() => setIsAuthModalOpen(true), []);
@@ -303,6 +347,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         isConfigured: isFirebaseConfigured,
         syncStatus,
+        syncError,
+        retrySync,
         isAuthModalOpen,
         openAuthModal,
         closeAuthModal,
