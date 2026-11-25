@@ -147,67 +147,67 @@ export function InteractiveAlphabet() {
       aria-labelledby="interactive-alphabet-heading"
       className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 sm:p-6 shadow-sm"
     >
-      {/* Header + single-level filter tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
-        <div>
-          <h2
-            id="interactive-alphabet-heading"
-            className="text-lg font-bold text-slate-900 dark:text-slate-100"
-          >
-            Интерактивный алфавит
-          </h2>
-          <p className="mt-0.5 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-            Нажимайте на буквы, чтобы увидеть артикуляцию и послушать турецкое произношение
-          </p>
-        </div>
-
-        <div
-          role="tablist"
-          aria-label="Фильтр букв алфавита"
-          className="inline-flex flex-wrap gap-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 p-1 self-start sm:self-auto"
+      {/* Header */}
+      <div className="pb-4 border-b border-slate-100 dark:border-slate-800">
+        <h2
+          id="interactive-alphabet-heading"
+          className="text-lg font-bold text-slate-900 dark:text-slate-100"
         >
-          {FILTER_OPTIONS.map((opt) => {
-            const active = filter === opt.id;
-            return (
-              <button
-                key={opt.id}
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => handleSelectFilter(opt.id)}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-all ${
-                  active
-                    ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm'
-                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
-                }`}
-              >
-                <span>{opt.label}</span>
-                <span
-                  className={`text-[11px] ${
-                    active
-                      ? 'text-blue-500/80 dark:text-blue-400/80'
-                      : 'text-slate-400 dark:text-slate-500'
-                  }`}
-                >
-                  {opt.count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+          Интерактивный алфавит
+        </h2>
+        <p className="mt-0.5 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          Нажимайте на буквы, чтобы увидеть артикуляцию и послушать турецкое произношение
+        </p>
       </div>
 
-      <div className="mt-4 space-y-5">
-        {/* Legend */}
-        <div className="flex flex-wrap items-center justify-end gap-4 text-[11px] text-slate-500 dark:text-slate-400">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-amber-500" />
-            Особая буква
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-blue-500" />
-            Гласная
-          </span>
+      <div className="mt-4 space-y-4">
+        {/* Filter tabs + legend */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div
+            role="tablist"
+            aria-label="Фильтр букв алфавита"
+            className="inline-flex max-w-full overflow-x-auto gap-1 rounded-xl bg-slate-100 dark:bg-slate-800/80 p-1"
+          >
+            {FILTER_OPTIONS.map((opt) => {
+              const active = filter === opt.id;
+              return (
+                <button
+                  key={opt.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => handleSelectFilter(opt.id)}
+                  className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                    active
+                      ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm'
+                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                  }`}
+                >
+                  <span>{opt.label}</span>
+                  <span
+                    className={`text-[11px] ${
+                      active
+                        ? 'text-blue-500/80 dark:text-blue-400/80'
+                        : 'text-slate-400 dark:text-slate-500'
+                    }`}
+                  >
+                    {opt.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="flex items-center gap-4 text-[11px] text-slate-500 dark:text-slate-400">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-amber-500" />
+              Особая буква
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-blue-500" />
+              Гласная
+            </span>
+          </div>
         </div>
 
         {/* 29-letter grid */}
