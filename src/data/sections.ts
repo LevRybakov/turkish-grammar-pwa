@@ -16,10 +16,6 @@ export const SECTIONS: Section[] = [
         affixes: [],
         keywords: ['алфавит', 'буквы', 'произношение', 'yumuşak g', 'ğ', 'ı', 'ö', 'ü', 'ş', 'ç'],
         summary: '29 букв турецкого алфавита: одна буква — один звук. Особые буквы ç, ğ, ı, i, ö, ş, ü.',
-        formula: [
-          { text: '29 букв', type: 'root', gloss: '8 гласных + 21 согласная' },
-          { text: 'ğ', type: 'affix', gloss: 'удлиняет предыдущую гласную' },
-        ],
         isDraft: false,
       },
       {

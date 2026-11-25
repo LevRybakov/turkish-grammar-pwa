@@ -51,6 +51,8 @@ export interface ConjugationTable {
   negativeQuestion?: Record<string, MorphemeToken[]>;
 }
 
+export type CustomInteractiveBlockType = 'alphabet';
+
 export interface GrammarTopic {
   id: string;
   sectionId: string;
@@ -62,6 +64,7 @@ export interface GrammarTopic {
   summary: string;
   formula: MorphemeToken[];
   conjugationTable?: ConjugationTable;
+  customInteractiveBlock?: CustomInteractiveBlockType;
   examples: ExampleSentence[];
   doNotConfuse?: {
     title: string;

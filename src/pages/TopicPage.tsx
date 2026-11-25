@@ -24,6 +24,7 @@ import type {
   InteractiveWord,
   MorphemeToken,
 } from '../types/grammar';
+import { InteractiveAlphabet } from '../components/InteractiveAlphabet';
 import { InteractiveMorphemeWord } from '../components/InteractiveMorphemeWord';
 import { useSearchModal } from '../components/Layout';
 import { MiniCheck } from '../components/MiniCheck';
@@ -477,6 +478,9 @@ export function TopicPage() {
           </div>
         )}
       </section>
+
+      {/* Block 2a: Custom interactive block (when topic uses specialized widget instead of formula/conjugation table) */}
+      {topic.customInteractiveBlock === 'alphabet' && <InteractiveAlphabet />}
 
       {/* Block 2: Interactive conjugation table */}
       {topic.conjugationTable && orderedPersons.length > 0 && (
