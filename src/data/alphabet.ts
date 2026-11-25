@@ -4,6 +4,7 @@ export interface AlphabetExample {
   tr: string;
   pronunciation: string;
   ru: string;
+  audioId: string;
 }
 
 export interface TurkishLetter {
@@ -11,6 +12,7 @@ export interface TurkishLetter {
   upper: string;
   lower: string;
   nameTr: string;
+  audioId: string;
   kind: LetterKind;
   isSpecial: boolean;
   /** Backness for vowels: kalın (твёрдая) / ince (мягкая) */
@@ -31,6 +33,7 @@ export interface TurkishLetter {
 export interface ReadingDrillItem {
   id: string;
   wordTr: string;
+  audioId: string;
   highlightChars: string[];
   meaningRu: string;
   correctOption: string;
@@ -44,6 +47,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'A',
     lower: 'a',
     nameTr: 'a',
+    audioId: 'letter-a',
     kind: 'vowel',
     isSpecial: false,
     vowelBackness: 'back',
@@ -53,8 +57,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[а]',
     tip: 'Чёткий открытый звук [а]. В отличие от русского, турецкие гласные не редуцируются и звучат ясно даже в безударных слогах.',
     examples: [
-      { tr: 'araba', pronunciation: '[араба]', ru: 'машина' },
-      { tr: 'anne', pronunciation: '[аннэ]', ru: 'мама' },
+      { tr: 'araba', pronunciation: '[араба]', ru: 'машина', audioId: 'word-araba' },
+      { tr: 'anne', pronunciation: '[аннэ]', ru: 'мама', audioId: 'word-anne' },
     ],
   },
   {
@@ -62,14 +66,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'B',
     lower: 'b',
     nameTr: 'be',
+    audioId: 'letter-b',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[b]',
     ruSound: '[б]',
     tip: 'Произносится как русское звонкое [б]. В начале и середине слова всегда чёткое.',
     examples: [
-      { tr: 'baba', pronunciation: '[баба]', ru: 'папа' },
-      { tr: 'balık', pronunciation: '[балык]', ru: 'рыба' },
+      { tr: 'baba', pronunciation: '[баба]', ru: 'папа', audioId: 'word-baba' },
+      { tr: 'balık', pronunciation: '[балык]', ru: 'рыба', audioId: 'word-balik' },
     ],
   },
   {
@@ -77,6 +82,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'C',
     lower: 'c',
     nameTr: 'ce',
+    audioId: 'letter-c',
     kind: 'consonant',
     isSpecial: true,
     ipa: '[dʒ]',
@@ -84,9 +90,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Звонкий слитный звук [дж], произносится одним движением языка — как английская «j» в слове «jam».',
     trap: 'Никогда не читайте «c» как русское [ц] или английское [к]: cam — это [джам], а cevap — [джевап].',
     examples: [
-      { tr: 'cam', pronunciation: '[джам]', ru: 'стекло, окно' },
-      { tr: 'cevap', pronunciation: '[джевап]', ru: 'ответ' },
-      { tr: 'sıcak', pronunciation: '[сыджак]', ru: 'жаркий' },
+      { tr: 'cam', pronunciation: '[джам]', ru: 'стекло, окно', audioId: 'word-cam' },
+      { tr: 'cevap', pronunciation: '[джевап]', ru: 'ответ', audioId: 'word-cevap' },
+      { tr: 'sıcak', pronunciation: '[сыджак]', ru: 'жаркий', audioId: 'word-sicak' },
     ],
   },
   {
@@ -94,6 +100,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'Ç',
     lower: 'ç',
     nameTr: 'çe',
+    audioId: 'letter-c-cedilla',
     kind: 'consonant',
     isSpecial: true,
     isVoicelessFistikci: true,
@@ -102,9 +109,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Глухой звук [ч], похожий на русский, но чуть более твёрдый. Входит в группу глухих согласных Fıstıkçı Şahap.',
     trap: 'Хвостик снизу меняет звонкое [дж] на глухое [ч]: can (душа) ≠ çan (колокол).',
     examples: [
-      { tr: 'çay', pronunciation: '[чай]', ru: 'чай' },
-      { tr: 'çocuk', pronunciation: '[чоджук]', ru: 'ребёнок' },
-      { tr: 'üç', pronunciation: '[юч]', ru: 'три' },
+      { tr: 'çay', pronunciation: '[чай]', ru: 'чай', audioId: 'word-cay' },
+      { tr: 'çocuk', pronunciation: '[чоджук]', ru: 'ребёнок', audioId: 'word-cocuk' },
+      { tr: 'üç', pronunciation: '[юч]', ru: 'три', audioId: 'word-uc' },
     ],
   },
   {
@@ -112,14 +119,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'D',
     lower: 'd',
     nameTr: 'de',
+    audioId: 'letter-d',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[d]',
     ruSound: '[д]',
     tip: 'Чёткое звонкое [д], кончик языка касается верхних зубов.',
     examples: [
-      { tr: 'deniz', pronunciation: '[дэниз]', ru: 'море' },
-      { tr: 'dost', pronunciation: '[дост]', ru: 'друг' },
+      { tr: 'deniz', pronunciation: '[дэниз]', ru: 'море', audioId: 'word-deniz' },
+      { tr: 'dost', pronunciation: '[дост]', ru: 'друг', audioId: 'word-dost' },
     ],
   },
   {
@@ -127,6 +135,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'E',
     lower: 'e',
     nameTr: 'e',
+    audioId: 'letter-e',
     kind: 'vowel',
     isSpecial: false,
     vowelBackness: 'front',
@@ -136,8 +145,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[э / е]',
     tip: 'Открытый звук [э] без начального призвука [й]: слово ev читается [эв], а не *[йэв].',
     examples: [
-      { tr: 'ev', pronunciation: '[эв]', ru: 'дом' },
-      { tr: 'elma', pronunciation: '[эльма]', ru: 'яблоко' },
+      { tr: 'ev', pronunciation: '[эв]', ru: 'дом', audioId: 'word-ev' },
+      { tr: 'elma', pronunciation: '[эльма]', ru: 'яблоко', audioId: 'word-elma' },
     ],
   },
   {
@@ -145,6 +154,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'F',
     lower: 'f',
     nameTr: 'fe',
+    audioId: 'letter-f',
     kind: 'consonant',
     isSpecial: false,
     isVoicelessFistikci: true,
@@ -152,8 +162,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[ф]',
     tip: 'Как русское глухое [ф]. Входит в группу глухих согласных Fıstıkçı Şahap.',
     examples: [
-      { tr: 'fark', pronunciation: '[фарк]', ru: 'разница' },
-      { tr: 'fincan', pronunciation: '[финджан]', ru: 'чашка' },
+      { tr: 'fark', pronunciation: '[фарк]', ru: 'разница', audioId: 'word-fark' },
+      { tr: 'fincan', pronunciation: '[финджан]', ru: 'чашка', audioId: 'word-fincan' },
     ],
   },
   {
@@ -161,14 +171,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'G',
     lower: 'g',
     nameTr: 'ge',
+    audioId: 'letter-g',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[ɡ / ɟ]',
     ruSound: '[г / гь]',
     tip: 'Твёрдое [г] рядом с твёрдыми гласными (garaj) и заметно мягкое [гь] рядом с мягкими гласными (göz, gün).',
     examples: [
-      { tr: 'gün', pronunciation: '[гюн]', ru: 'день' },
-      { tr: 'göz', pronunciation: '[гёз]', ru: 'глаз' },
+      { tr: 'gün', pronunciation: '[гюн]', ru: 'день', audioId: 'word-gun' },
+      { tr: 'göz', pronunciation: '[гёз]', ru: 'глаз', audioId: 'word-goz' },
     ],
   },
   {
@@ -176,6 +187,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'Ğ',
     lower: 'ğ',
     nameTr: 'yumuşak ge',
+    audioId: 'letter-g-breve',
     kind: 'consonant',
     isSpecial: true,
     ipa: '[ː / j]',
@@ -183,9 +195,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: '«Мягкая g» не даёт звука [г]: после твёрдых гласных (a, ı, o, u) она удлиняет их (dağ → [даа]), а рядом с e/i даёт лёгкий переход [й] (diğer → [дийэр]).',
     trap: 'Никогда не стоит в начале слова и никогда не произносится как [г]!',
     examples: [
-      { tr: 'dağ', pronunciation: '[даа]', ru: 'гора' },
-      { tr: 'yağmur', pronunciation: '[яамур]', ru: 'дождь' },
-      { tr: 'öğretmen', pronunciation: '[ёёретмэн]', ru: 'учитель' },
+      { tr: 'dağ', pronunciation: '[даа]', ru: 'гора', audioId: 'word-dag' },
+      { tr: 'yağmur', pronunciation: '[яамур]', ru: 'дождь', audioId: 'word-yagmur' },
+      { tr: 'öğretmen', pronunciation: '[ёёретмэн]', ru: 'учитель', audioId: 'word-ogretmen' },
     ],
   },
   {
@@ -193,6 +205,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'H',
     lower: 'h',
     nameTr: 'he',
+    audioId: 'letter-h',
     kind: 'consonant',
     isSpecial: false,
     isVoicelessFistikci: true,
@@ -200,8 +213,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[х] (лёгкий выдох)',
     tip: 'Мягкий выдох, как английская «h» в «hello» — заметно легче и воздушнее русского «х». Входит в Fıstıkçı Şahap.',
     examples: [
-      { tr: 'hava', pronunciation: '[хава]', ru: 'погода, воздух' },
-      { tr: 'hayat', pronunciation: '[хаят]', ru: 'жизнь' },
+      { tr: 'hava', pronunciation: '[хава]', ru: 'погода, воздух', audioId: 'word-hava' },
+      { tr: 'hayat', pronunciation: '[хаят]', ru: 'жизнь', audioId: 'word-hayat' },
     ],
   },
   {
@@ -209,6 +222,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'I',
     lower: 'ı',
     nameTr: 'ı',
+    audioId: 'letter-dotless-i',
     kind: 'vowel',
     isSpecial: true,
     vowelBackness: 'back',
@@ -219,9 +233,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Твёрдая неогубленная гласная [ы]. Губы расслаблены и не вытянуты, язык чуть оттянут назад.',
     trap: 'Ни у заглавной I, ни у строчной ı нет точки! Сравните пары: kış (зима) ≠ kişi (человек), Işık (свет) ≠ İş (работа).',
     examples: [
-      { tr: 'ılık', pronunciation: '[ылык]', ru: 'тёплый' },
-      { tr: 'kış', pronunciation: '[кыш]', ru: 'зима' },
-      { tr: 'ışık', pronunciation: '[ышык]', ru: 'свет' },
+      { tr: 'ılık', pronunciation: '[ылык]', ru: 'тёплый', audioId: 'word-ilik' },
+      { tr: 'kış', pronunciation: '[кыш]', ru: 'зима', audioId: 'word-kis' },
+      { tr: 'ışık', pronunciation: '[ышык]', ru: 'свет', audioId: 'word-isik' },
     ],
   },
   {
@@ -229,6 +243,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'İ',
     lower: 'i',
     nameTr: 'i',
+    audioId: 'letter-dotted-i',
     kind: 'vowel',
     isSpecial: true,
     vowelBackness: 'front',
@@ -239,9 +254,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Чёткий мягкий звук [и]. Точка сверху — обязательная часть этой буквы в обоих регистрах.',
     trap: 'Заглавная пара к «i» — всегда İ с точкой (İstanbul, İş), а не английская «I»!',
     examples: [
-      { tr: 'İstanbul', pronunciation: '[истанбул]', ru: 'Стамбул' },
-      { tr: 'iş', pronunciation: '[иш]', ru: 'работа' },
-      { tr: 'iyi', pronunciation: '[ийи]', ru: 'хороший' },
+      { tr: 'İstanbul', pronunciation: '[истанбул]', ru: 'Стамбул', audioId: 'word-istanbul' },
+      { tr: 'iş', pronunciation: '[иш]', ru: 'работа', audioId: 'word-is' },
+      { tr: 'iyi', pronunciation: '[ийи]', ru: 'хороший', audioId: 'word-iyi' },
     ],
   },
   {
@@ -249,6 +264,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'J',
     lower: 'j',
     nameTr: 'je',
+    audioId: 'letter-j',
     kind: 'consonant',
     isSpecial: true,
     ipa: '[ʒ]',
@@ -256,9 +272,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Звучит как мягкое русское [ж] (как во французском «bonjour»). Встречается в основном в заимствованных словах.',
     trap: 'Не путайте с английским [дж]: «j» — это [ж] (garaj [гараж]), а [дж] в турецком пишется через «c».',
     examples: [
-      { tr: 'garaj', pronunciation: '[гараж]', ru: 'гараж' },
-      { tr: 'plaj', pronunciation: '[пляж]', ru: 'пляж' },
-      { tr: 'jandarma', pronunciation: '[жандарма]', ru: 'жандармерия' },
+      { tr: 'garaj', pronunciation: '[гараж]', ru: 'гараж', audioId: 'word-garaj' },
+      { tr: 'plaj', pronunciation: '[пляж]', ru: 'пляж', audioId: 'word-plaj' },
+      { tr: 'jandarma', pronunciation: '[жандарма]', ru: 'жандармерия', audioId: 'word-jandarma' },
     ],
   },
   {
@@ -266,6 +282,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'K',
     lower: 'k',
     nameTr: 'ke',
+    audioId: 'letter-k',
     kind: 'consonant',
     isSpecial: false,
     isVoicelessFistikci: true,
@@ -273,8 +290,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[к / кь]',
     tip: 'Твёрдое [к] с твёрдыми гласными (kapı) и мягкое [кь] с мягкими (kedi, köy). Входит в Fıstıkçı Şahap.',
     examples: [
-      { tr: 'kitap', pronunciation: '[китап]', ru: 'книга' },
-      { tr: 'kedi', pronunciation: '[кьеди]', ru: 'кошка' },
+      { tr: 'kitap', pronunciation: '[китап]', ru: 'книга', audioId: 'word-kitap' },
+      { tr: 'kedi', pronunciation: '[кьеди]', ru: 'кошка', audioId: 'word-kedi' },
     ],
   },
   {
@@ -282,14 +299,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'L',
     lower: 'l',
     nameTr: 'le',
+    audioId: 'letter-l',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[ɫ / l]',
     ruSound: '[л / ль]',
     tip: 'Твёрдое [л] с твёрдыми гласными и мягкое [ль] с мягкими. В ряде заимствований (kalp, hayal, normal) l остаётся мягким и притягивает мягкие аффиксы (-ler, -mi).',
     examples: [
-      { tr: 'limon', pronunciation: '[лимон]', ru: 'лимон' },
-      { tr: 'hayal', pronunciation: '[хаяль]', ru: 'мечта' },
+      { tr: 'limon', pronunciation: '[лимон]', ru: 'лимон', audioId: 'word-limon' },
+      { tr: 'hayal', pronunciation: '[хаяль]', ru: 'мечта', audioId: 'word-hayal' },
     ],
   },
   {
@@ -297,14 +315,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'M',
     lower: 'm',
     nameTr: 'me',
+    audioId: 'letter-m',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[m]',
     ruSound: '[м]',
     tip: 'Произносится точно так же, как русское [м].',
     examples: [
-      { tr: 'masa', pronunciation: '[маса]', ru: 'стол' },
-      { tr: 'merhaba', pronunciation: '[мэрхаба]', ru: 'здравствуйте' },
+      { tr: 'masa', pronunciation: '[маса]', ru: 'стол', audioId: 'word-masa' },
+      { tr: 'merhaba', pronunciation: '[мэрхаба]', ru: 'здравствуйте', audioId: 'word-merhaba' },
     ],
   },
   {
@@ -312,14 +331,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'N',
     lower: 'n',
     nameTr: 'ne',
+    audioId: 'letter-n',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[n]',
     ruSound: '[н]',
     tip: 'Как русское [н]. Перед буквой b в живой речи звучит близко к [м] (İstanbul).',
     examples: [
-      { tr: 'nar', pronunciation: '[нар]', ru: 'гранат' },
-      { tr: 'neden', pronunciation: '[нэдэн]', ru: 'почему' },
+      { tr: 'nar', pronunciation: '[нар]', ru: 'гранат', audioId: 'word-nar' },
+      { tr: 'neden', pronunciation: '[нэдэн]', ru: 'почему', audioId: 'word-neden' },
     ],
   },
   {
@@ -327,6 +347,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'O',
     lower: 'o',
     nameTr: 'o',
+    audioId: 'letter-o',
     kind: 'vowel',
     isSpecial: false,
     vowelBackness: 'back',
@@ -336,8 +357,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[о]',
     tip: 'Всегда чёткое [о]. В турецком нет русского «аканья»: okul произносится [окул], а не *[акул].',
     examples: [
-      { tr: 'okul', pronunciation: '[окул]', ru: 'школа' },
-      { tr: 'oda', pronunciation: '[ода]', ru: 'комната' },
+      { tr: 'okul', pronunciation: '[окул]', ru: 'школа', audioId: 'word-okul' },
+      { tr: 'oda', pronunciation: '[ода]', ru: 'комната', audioId: 'word-oda' },
     ],
   },
   {
@@ -345,6 +366,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'Ö',
     lower: 'ö',
     nameTr: 'ö',
+    audioId: 'letter-o-umlaut',
     kind: 'vowel',
     isSpecial: true,
     vowelBackness: 'front',
@@ -355,9 +377,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Сложите губы трубочкой как для «о», но произнесите «э» — получится чистое мягкое [ё] без начального [й], как в слове «мёд».',
     trap: 'Две точки меняют смысл слова: on (десять) ≠ ön (перед), gol (гол) ≠ göl (озеро).',
     examples: [
-      { tr: 'göz', pronunciation: '[гёз]', ru: 'глаз' },
-      { tr: 'köy', pronunciation: '[кёй]', ru: 'деревня' },
-      { tr: 'örnek', pronunciation: '[ёрнэк]', ru: 'пример' },
+      { tr: 'göz', pronunciation: '[гёз]', ru: 'глаз', audioId: 'word-goz' },
+      { tr: 'köy', pronunciation: '[кёй]', ru: 'деревня', audioId: 'word-koy' },
+      { tr: 'örnek', pronunciation: '[ёрнэк]', ru: 'пример', audioId: 'word-ornek' },
     ],
   },
   {
@@ -365,6 +387,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'P',
     lower: 'p',
     nameTr: 'pe',
+    audioId: 'letter-p',
     kind: 'consonant',
     isSpecial: false,
     isVoicelessFistikci: true,
@@ -372,8 +395,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[п]',
     tip: 'Глухое [п] с лёгким придыханием. Входит в Fıstıkçı Şahap и на конце основы часто озвончается в b перед гласной (kitap → kitabı).',
     examples: [
-      { tr: 'para', pronunciation: '[пара]', ru: 'деньги' },
-      { tr: 'pazar', pronunciation: '[пазар]', ru: 'рынок, воскресенье' },
+      { tr: 'para', pronunciation: '[пара]', ru: 'деньги', audioId: 'word-para' },
+      { tr: 'pazar', pronunciation: '[пазар]', ru: 'рынок, воскресенье', audioId: 'word-pazar' },
     ],
   },
   {
@@ -381,14 +404,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'R',
     lower: 'r',
     nameTr: 're',
+    audioId: 'letter-r',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[ɾ]',
     ruSound: '[р]',
     tip: 'Лёгкий одноударный [р]. На самом конце слова звучит слегка приглушённо, с едва заметным шипящим призвуком (bir, var).',
     examples: [
-      { tr: 'renk', pronunciation: '[рэнк]', ru: 'цвет' },
-      { tr: 'rüzgâr', pronunciation: '[рюзгяр]', ru: 'ветер' },
+      { tr: 'renk', pronunciation: '[рэнк]', ru: 'цвет', audioId: 'word-renk' },
+      { tr: 'rüzgâr', pronunciation: '[рюзгяр]', ru: 'ветер', audioId: 'word-ruzgar' },
     ],
   },
   {
@@ -396,6 +420,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'S',
     lower: 's',
     nameTr: 'se',
+    audioId: 'letter-s',
     kind: 'consonant',
     isSpecial: false,
     isVoicelessFistikci: true,
@@ -403,8 +428,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[с]',
     tip: 'Всегда глухое чёткое [с], никогда не переходит в [з] между гласными. Входит в Fıstıkçı Şahap.',
     examples: [
-      { tr: 'su', pronunciation: '[су]', ru: 'вода' },
-      { tr: 'sabah', pronunciation: '[сабах]', ru: 'утро' },
+      { tr: 'su', pronunciation: '[су]', ru: 'вода', audioId: 'word-su' },
+      { tr: 'sabah', pronunciation: '[сабах]', ru: 'утро', audioId: 'word-sabah' },
     ],
   },
   {
@@ -412,6 +437,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'Ş',
     lower: 'ş',
     nameTr: 'şe',
+    audioId: 'letter-s-cedilla',
     kind: 'consonant',
     isSpecial: true,
     isVoicelessFistikci: true,
@@ -420,9 +446,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Глухой шипящий звук [ш], чуть мягче русского. Входит в группу глухих согласных Fıstıkçı Şahap.',
     trap: 'Хвостик снизу превращает s [с] в ş [ш]: akşam [акшам] (вечер), şehir [шэхир] (город).',
     examples: [
-      { tr: 'şeker', pronunciation: '[шэкэр]', ru: 'сахар' },
-      { tr: 'akşam', pronunciation: '[акшам]', ru: 'вечер' },
-      { tr: 'şehir', pronunciation: '[шэхир]', ru: 'город' },
+      { tr: 'şeker', pronunciation: '[шэкэр]', ru: 'сахар', audioId: 'word-seker' },
+      { tr: 'akşam', pronunciation: '[акшам]', ru: 'вечер', audioId: 'word-aksam' },
+      { tr: 'şehir', pronunciation: '[шэхир]', ru: 'город', audioId: 'word-sehir' },
     ],
   },
   {
@@ -430,6 +456,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'T',
     lower: 't',
     nameTr: 'te',
+    audioId: 'letter-t',
     kind: 'consonant',
     isSpecial: false,
     isVoicelessFistikci: true,
@@ -437,8 +464,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[т]',
     tip: 'Чёткое глухое [т] у верхних зубов. Входит в группу глухих согласных Fıstıkçı Şahap.',
     examples: [
-      { tr: 'taş', pronunciation: '[таш]', ru: 'камень' },
-      { tr: 'tatlı', pronunciation: '[татлы]', ru: 'сладкий' },
+      { tr: 'taş', pronunciation: '[таш]', ru: 'камень', audioId: 'word-tas' },
+      { tr: 'tatlı', pronunciation: '[татлы]', ru: 'сладкий', audioId: 'word-tatli' },
     ],
   },
   {
@@ -446,6 +473,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'U',
     lower: 'u',
     nameTr: 'u',
+    audioId: 'letter-u',
     kind: 'vowel',
     isSpecial: false,
     vowelBackness: 'back',
@@ -455,8 +483,8 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     ruSound: '[у]',
     tip: 'Чистое твёрдое [у] с заметно округлёнными губами.',
     examples: [
-      { tr: 'uçak', pronunciation: '[учак]', ru: 'самолёт' },
-      { tr: 'uzun', pronunciation: '[узун]', ru: 'длинный' },
+      { tr: 'uçak', pronunciation: '[учак]', ru: 'самолёт', audioId: 'word-ucak' },
+      { tr: 'uzun', pronunciation: '[узун]', ru: 'длинный', audioId: 'word-uzun' },
     ],
   },
   {
@@ -464,6 +492,7 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'Ü',
     lower: 'ü',
     nameTr: 'ü',
+    audioId: 'letter-u-umlaut',
     kind: 'vowel',
     isSpecial: true,
     vowelBackness: 'front',
@@ -474,9 +503,9 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     tip: 'Вытяните губы трубочкой как для «у», но произнесите «и» — получится мягкое [ю] без начального [й], как в слове «люди».',
     trap: 'Без точек меняется значение слова: üç (три) ≠ uç (край, кончик).',
     examples: [
-      { tr: 'üç', pronunciation: '[юч]', ru: 'три' },
-      { tr: 'gül', pronunciation: '[гюль]', ru: 'роза' },
-      { tr: 'küçük', pronunciation: '[кючюк]', ru: 'маленький' },
+      { tr: 'üç', pronunciation: '[юч]', ru: 'три', audioId: 'word-uc' },
+      { tr: 'gül', pronunciation: '[гюль]', ru: 'роза', audioId: 'word-gul' },
+      { tr: 'küçük', pronunciation: '[кючюк]', ru: 'маленький', audioId: 'word-kucuk' },
     ],
   },
   {
@@ -484,14 +513,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'V',
     lower: 'v',
     nameTr: 've',
+    audioId: 'letter-v',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[v / ʋ]',
     ruSound: '[в]',
     tip: 'Мягкое [в]; между гласными звучит чуть воздушнее, с лёгким оттенком английского «w» (hava, tavuk).',
     examples: [
-      { tr: 'vakit', pronunciation: '[вакит]', ru: 'время' },
-      { tr: 'vapur', pronunciation: '[вапур]', ru: 'паром' },
+      { tr: 'vakit', pronunciation: '[вакит]', ru: 'время', audioId: 'word-vakit' },
+      { tr: 'vapur', pronunciation: '[вапур]', ru: 'паром', audioId: 'word-vapur' },
     ],
   },
   {
@@ -499,14 +529,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'Y',
     lower: 'y',
     nameTr: 'ye',
+    audioId: 'letter-y',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[j]',
     ruSound: '[й]',
     tip: 'Как русское [й]. Вместе со следующей гласной даёт слитные сочетания: ya [я], ye [йе], yo [йо], yu [ю]. Главная соединительная согласная между гласными.',
     examples: [
-      { tr: 'yol', pronunciation: '[йол]', ru: 'дорога' },
-      { tr: 'yeni', pronunciation: '[йени]', ru: 'новый' },
+      { tr: 'yol', pronunciation: '[йол]', ru: 'дорога', audioId: 'word-yol' },
+      { tr: 'yeni', pronunciation: '[йени]', ru: 'новый', audioId: 'word-yeni' },
     ],
   },
   {
@@ -514,14 +545,15 @@ export const TURKISH_ALPHABET: TurkishLetter[] = [
     upper: 'Z',
     lower: 'z',
     nameTr: 'ze',
+    audioId: 'letter-z',
     kind: 'consonant',
     isSpecial: false,
     ipa: '[z]',
     ruSound: '[з]',
     tip: 'Звонкое [з]. На конце слова звучит чуть мягче, но не оглушается полностью в [с].',
     examples: [
-      { tr: 'zaman', pronunciation: '[заман]', ru: 'время' },
-      { tr: 'zor', pronunciation: '[зор]', ru: 'трудный' },
+      { tr: 'zaman', pronunciation: '[заман]', ru: 'время', audioId: 'word-zaman' },
+      { tr: 'zor', pronunciation: '[зор]', ru: 'трудный', audioId: 'word-zor' },
     ],
   },
 ];
@@ -530,6 +562,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-cam',
     wordTr: 'cam',
+    audioId: 'word-cam',
     highlightChars: ['c'],
     meaningRu: 'стекло, окно',
     correctOption: '[джам]',
@@ -539,6 +572,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-dag',
     wordTr: 'dağ',
+    audioId: 'word-dag',
     highlightChars: ['ğ'],
     meaningRu: 'гора',
     correctOption: '[даа]',
@@ -548,6 +582,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-ilik',
     wordTr: 'ılık',
+    audioId: 'word-ilik',
     highlightChars: ['ı'],
     meaningRu: 'тёплый',
     correctOption: '[ылык]',
@@ -557,6 +592,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-cay',
     wordTr: 'çay',
+    audioId: 'word-cay',
     highlightChars: ['ç'],
     meaningRu: 'чай',
     correctOption: '[чай]',
@@ -566,6 +602,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-aksam',
     wordTr: 'akşam',
+    audioId: 'word-aksam',
     highlightChars: ['ş'],
     meaningRu: 'вечер',
     correctOption: '[акшам]',
@@ -575,6 +612,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-goz',
     wordTr: 'göz',
+    audioId: 'word-goz',
     highlightChars: ['ö'],
     meaningRu: 'глаз',
     correctOption: '[гёз]',
@@ -584,6 +622,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-kucuk',
     wordTr: 'küçük',
+    audioId: 'word-kucuk',
     highlightChars: ['ü', 'ç'],
     meaningRu: 'маленький',
     correctOption: '[кючюк]',
@@ -593,6 +632,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-garaj',
     wordTr: 'garaj',
+    audioId: 'word-garaj',
     highlightChars: ['j'],
     meaningRu: 'гараж',
     correctOption: '[гараж]',
@@ -602,6 +642,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-ogretmen',
     wordTr: 'öğretmen',
+    audioId: 'word-ogretmen',
     highlightChars: ['ö', 'ğ'],
     meaningRu: 'учитель',
     correctOption: '[ёёретмэн]',
@@ -611,6 +652,7 @@ export const READING_DRILL_ITEMS: ReadingDrillItem[] = [
   {
     id: 'drill-cocuk',
     wordTr: 'çocuk',
+    audioId: 'word-cocuk',
     highlightChars: ['ç', 'c'],
     meaningRu: 'ребёнок',
     correctOption: '[чоджук]',
